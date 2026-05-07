@@ -71,6 +71,14 @@ async def login(
         "access_token": token,
         "token_type": "bearer",
         "expires_in": settings.ACCESS_TOKEN_EXPIRE_HOURS * 3600,  # em segundos
+        # Dados do usuário para o frontend armazenar no localStorage
+        "user": {
+            "id": str(user.id),
+            "name": user.name,
+            "email": user.email,
+            "role": user.role,
+            "judge_id": str(user.judge_id) if user.judge_id else None,
+        },
     }
 
 

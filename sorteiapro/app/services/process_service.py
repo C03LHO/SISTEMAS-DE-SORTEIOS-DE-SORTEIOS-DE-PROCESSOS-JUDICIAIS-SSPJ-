@@ -50,6 +50,9 @@ async def create_process(
         process_number=data.process_number,
         level=data.level.value,
         person_id=data.person_id,
+        process_type=data.process_type,
+        court_unit=data.court_unit,
+        description=data.description,
         lottery_scheduled_at=lottery_at,
         created_by_id=created_by.id,
     )
@@ -149,6 +152,12 @@ async def update_process(
         process.level = data.level.value
     if data.person_id is not None:
         process.person_id = data.person_id
+    if data.process_type is not None:
+        process.process_type = data.process_type
+    if data.court_unit is not None:
+        process.court_unit = data.court_unit
+    if data.description is not None:
+        process.description = data.description
 
     await audit_service.log(
         db=db,

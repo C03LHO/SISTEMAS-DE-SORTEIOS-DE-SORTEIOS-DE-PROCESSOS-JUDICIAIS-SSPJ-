@@ -2,6 +2,7 @@ fastapi
 uvicorn[standard]
 sqlalchemy[asyncio]
 asyncpg
+aiosqlite
 alembic
 psycopg2-binary
 python-jose[cryptography]

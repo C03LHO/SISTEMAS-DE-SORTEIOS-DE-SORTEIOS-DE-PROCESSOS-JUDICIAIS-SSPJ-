@@ -19,8 +19,23 @@ class ProcessCreate(BaseModel):
         max_length=50,
         description="Número único do processo (ex: 0001234-56.2024.8.06.0001)"
     )
-    level: ProcessLevel = Field(..., description="Nível de complexidade: 1=BASIC, 2=INTERMEDIATE, 3=COMPLEX")
-    person_id: UUID = Field(..., description="ID da pessoa (parte do processo)")
+    level: ProcessLevel = Field(..., description="Nível: 1=BASIC, 2=INTERMEDIATE, 3=COMPLEX")
+    person_id: UUID = Field(..., description="ID da pessoa (parte principal do processo)")
+    process_type: Optional[str] = Field(
+        default=None,
+        max_length=200,
+        description="Tipo/natureza do processo (ex: Ação Civil Pública)"
+    )
+    court_unit: Optional[str] = Field(
+        default=None,
+        max_length=100,
+        description="Vara ou unidade judicial responsável"
+    )
+    description: Optional[str] = Field(
+        default=None,
+        max_length=1000,
+        description="Descrição ou resumo do processo"
+    )
 
 
 class ProcessUpdate(BaseModel):
@@ -31,6 +46,9 @@ class ProcessUpdate(BaseModel):
     process_number: Optional[str] = Field(default=None, min_length=1, max_length=50)
     level: Optional[ProcessLevel] = None
     person_id: Optional[UUID] = None
+    process_type: Optional[str] = Field(default=None, max_length=200)
+    court_unit: Optional[str] = Field(default=None, max_length=100)
+    description: Optional[str] = Field(default=None, max_length=1000)
 
 
 class ProcessResponse(BaseModel):
@@ -40,6 +58,9 @@ class ProcessResponse(BaseModel):
     level: ProcessLevel
     status: ProcessStatus
     person_id: UUID
+    process_type: Optional[str] = None
+    court_unit: Optional[str] = None
+    description: Optional[str] = None
     assigned_judge_id: Optional[UUID] = None
     temp_judge_id: Optional[UUID] = None
     original_judge_id: Optional[UUID] = None

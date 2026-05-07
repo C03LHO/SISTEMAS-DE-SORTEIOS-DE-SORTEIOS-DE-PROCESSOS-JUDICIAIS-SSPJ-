@@ -8,6 +8,8 @@ Rotas:
   GET /audit/logs/{entity}/{entity_id}   — TI, JUDGE, ASSESSOR: logs de uma entidade
 """
 
+from typing import Optional
+
 from fastapi import APIRouter, Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -27,19 +29,19 @@ router = APIRouter(prefix="/audit", tags=["Auditoria"])
 async def listar_logs(
     db: AsyncSession = Depends(get_db),
     current_user=require_roles(UserRole.TI),
+    entity: Optional[str] = None,
     limit: int = 100,
     offset: int = 0,
 ):
     """
     Paginação via query params `limit` e `offset`.
-    Exemplo: GET /audit/logs?limit=50&offset=100
+    Filtro opcional por entidade: `?entity=process`
+    Exemplo: GET /audit/logs?entity=process&limit=50&offset=100
     """
-    result = await db.execute(
-        select(AuditLog)
-        .order_by(AuditLog.created_at.desc())
-        .limit(limit)
-        .offset(offset)
-    )
+    query = select(AuditLog).order_by(AuditLog.created_at.desc())
+    if entity:
+        query = query.where(AuditLog.entity == entity)
+    result = await db.execute(query.limit(limit).offset(offset))
     logs = result.scalars().all()
     return [_format_log(log) for log in logs]
 

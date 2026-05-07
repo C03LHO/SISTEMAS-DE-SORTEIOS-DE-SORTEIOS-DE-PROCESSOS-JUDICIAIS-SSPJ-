@@ -7,13 +7,17 @@ Configura:
 - Registro de todos os routers
 - Middleware CORS (configurado para desenvolvimento)
 - Rota de healthcheck em /health
+- StaticFiles: serve o frontend SPA em /app
 """
+
+import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.jobs.scheduler import lifespan
-from app.routers import auth, users, processes, conflicts, audit
+from app.routers import auth, users, processes, conflicts, audit, persons, lottery_state
 
 # ─── Criação da aplicação ─────────────────────────────────────────────────────
 app = FastAPI(
@@ -50,12 +54,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ─── Routers ──────────────────────────────────────────────────────────────────
+# ─── Routers da API ───────────────────────────────────────────────────────────
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(processes.router)
 app.include_router(conflicts.router)
 app.include_router(audit.router)
+app.include_router(persons.router)
+app.include_router(lottery_state.router)
 
 
 # ─── Healthcheck ──────────────────────────────────────────────────────────────
@@ -68,3 +74,12 @@ app.include_router(audit.router)
 async def healthcheck():
     """Endpoint simples para monitoramento e balanceadores de carga."""
     return {"status": "ok", "sistema": "SorteiaPro"}
+
+
+# ─── Frontend SPA ─────────────────────────────────────────────────────────────
+# Serve os arquivos estáticos do frontend.
+# DEVE ficar DEPOIS das rotas da API para não interceptar /health, /docs, etc.
+# Acesse em: http://localhost:8000/app/
+_frontend_dir = os.path.join(os.path.dirname(__file__), "..", "frontend")
+if os.path.isdir(_frontend_dir):
+    app.mount("/app", StaticFiles(directory=_frontend_dir, html=True), name="frontend")

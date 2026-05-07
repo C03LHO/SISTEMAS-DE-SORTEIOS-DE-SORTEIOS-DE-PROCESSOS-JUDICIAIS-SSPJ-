@@ -6,14 +6,13 @@ LotteryRound: histórico de cada sorteio realizado.
 
 LotteryState: estado global do algoritmo de sorteio (tabela singleton).
   - Sempre há exatamente 1 linha nesta tabela.
-  - Armazena os dados de balanceamento e rodízio em colunas JSONB.
+  - Armazena os dados de balanceamento e rodízio em colunas JSON.
 """
 
 import uuid
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, Integer
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import DateTime, ForeignKey, Integer, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -51,7 +50,7 @@ class LotteryState(Base):
     """
     Estado global do algoritmo de sorteio — sempre 1 linha (singleton).
 
-    Campos JSONB:
+    Campos JSON:
       complex_round_participants: lista de judge_ids que já receberam processo
         COMPLEX na rodada atual. Reiniciada quando todos os 8 participarem.
 
@@ -72,21 +71,21 @@ class LotteryState(Base):
 
     # Lista de IDs dos juízes que já receberam processo COMPLEX na rodada atual
     complex_round_participants: Mapped[list] = mapped_column(
-        JSONB,
+        JSON,
         default=list,
         nullable=False
     )
 
     # Juízes com prioridade no próximo sorteio (após recusa de processo)
     judge_priorities: Mapped[dict] = mapped_column(
-        JSONB,
+        JSON,
         default=dict,
         nullable=False
     )
 
     # Soma ponderada dos processos por juiz (para verificar balanceamento)
     judge_weighted_sums: Mapped[dict] = mapped_column(
-        JSONB,
+        JSON,
         default=dict,
         nullable=False
     )

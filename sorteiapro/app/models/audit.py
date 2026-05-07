@@ -8,8 +8,7 @@ Registra todas as ações relevantes: sorteios, atribuições, conflitos, logins
 import uuid
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, String
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import DateTime, ForeignKey, String, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -39,7 +38,7 @@ class AuditLog(Base):
     entity_id: Mapped[str] = mapped_column(String(100), nullable=False)
 
     # Dados adicionais em formato livre (ex: juiz sorteado, motivo da recusa)
-    details: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    details: Mapped[dict] = mapped_column(JSON, default=dict, nullable=False)
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime,

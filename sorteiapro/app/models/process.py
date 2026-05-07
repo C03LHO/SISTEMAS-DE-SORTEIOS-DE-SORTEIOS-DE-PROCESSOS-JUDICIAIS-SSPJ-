@@ -56,6 +56,24 @@ class Process(Base):
         nullable=False
     )
 
+    # Tipo/natureza do processo (ex: "Ação Civil Pública", "Habeas Corpus")
+    process_type: Mapped[Optional[str]] = mapped_column(
+        String(200),
+        nullable=True
+    )
+
+    # Vara ou unidade judicial responsável
+    court_unit: Mapped[Optional[str]] = mapped_column(
+        String(100),
+        nullable=True
+    )
+
+    # Descrição/resumo livre do processo
+    description: Mapped[Optional[str]] = mapped_column(
+        String(1000),
+        nullable=True
+    )
+
     level: Mapped[int] = mapped_column(Integer, nullable=False)
     status: Mapped[str] = mapped_column(
         String(30),

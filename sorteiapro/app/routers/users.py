@@ -16,7 +16,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.deps import get_db, require_roles
+from app.core.deps import get_db, get_current_user, require_roles
 from app.models.user import UserRole
 from app.schemas.user import UserCreate, UserUpdate, UserResponse, LinkAssessorRequest
 from app.services import user_service
@@ -25,6 +25,19 @@ router = APIRouter(prefix="/users", tags=["Usuários"])
 
 # Dependência reutilizável: apenas TI pode acessar estas rotas
 somente_ti = require_roles(UserRole.TI)
+
+
+@router.get(
+    "/me",
+    response_model=UserResponse,
+    summary="Perfil do usuário autenticado",
+    description="Retorna os dados do usuário que está autenticado no momento.",
+)
+async def meu_perfil(
+    current_user=Depends(get_current_user),
+):
+    """Útil para o frontend exibir o nome e papel do usuário logado."""
+    return current_user
 
 
 @router.get(

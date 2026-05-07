@@ -2,7 +2,8 @@
 Configurações globais da aplicação.
 
 Usa pydantic-settings para carregar variáveis do arquivo .env automaticamente.
-Todas as variáveis de ambiente obrigatórias são declaradas aqui.
+Por padrão, usa SQLite para facilitar o desenvolvimento/teste local.
+Para produção, altere para PostgreSQL no arquivo .env.
 """
 
 from pydantic_settings import BaseSettings
@@ -11,15 +12,16 @@ from pydantic import Field
 
 class Settings(BaseSettings):
     # ─── Banco de dados ───────────────────────────────────────────────────────
-    # URL async (asyncpg) usada pela aplicação em tempo de execução
+    # Padrão: SQLite (sem precisar instalar PostgreSQL para testar)
+    # Para produção: postgresql+asyncpg://user:password@localhost:5432/sorteiapro
     DATABASE_URL: str = Field(
-        default="postgresql+asyncpg://user:password@localhost:5432/sorteiapro",
-        description="URL de conexão async com o PostgreSQL"
+        default="sqlite+aiosqlite:///./sorteiapro.db",
+        description="URL de conexão async. SQLite para dev, PostgreSQL para produção."
     )
-    # URL síncrona (psycopg2) usada pelo Alembic para rodar migrations
+    # URL síncrona para o Alembic rodar migrations
     SYNC_DATABASE_URL: str = Field(
-        default="postgresql://user:password@localhost:5432/sorteiapro",
-        description="URL de conexão síncrona para o Alembic"
+        default="sqlite:///./sorteiapro.db",
+        description="URL síncrona para o Alembic gerar/aplicar migrations."
     )
 
     # ─── Segurança / JWT ──────────────────────────────────────────────────────
@@ -49,7 +51,6 @@ class Settings(BaseSettings):
     )
 
     class Config:
-        # Carrega variáveis do arquivo .env na raiz do projeto
         env_file = ".env"
         env_file_encoding = "utf-8"
 
