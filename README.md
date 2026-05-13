@@ -1,1 +1,1 @@
-# SISTEMAS-DE-SORTEIOS-DE-SORTEIOS-DE-PROCESSOS-JUDICIAIS-SSPJ-
+# SSPJ — Sistema de Sorteio de Processos Judiciais
