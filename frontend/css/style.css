@@ -1,0 +1,17 @@
+.sidebar { min-height: calc(100vh - 56px); background: #f8f9fa; padding: 1rem; border-right: 1px solid #dee2e6; }
+.sidebar .nav-link { color: #333; cursor: pointer; }
+.sidebar .nav-link.active { background: #0d6efd; color: white; border-radius: 4px; }
+.main-area { padding: 1.5rem; }
+.badge-nivel-1 { background-color: #198754; }
+.badge-nivel-2 { background-color: #ffc107; color: #000; }
+.badge-nivel-3 { background-color: #dc3545; }
+.badge-status-PENDENTE { background-color: #6c757d; }
+.badge-status-SORTEADO { background-color: #0d6efd; }
+.badge-status-AGUARDANDO_JUIZ_EXTERNO { background-color: #fd7e14; }
+.badge-status-ENCERRADO { background-color: #198754; }
+.badge-motivo-SORTEIO_NORMAL { background-color: #0d6efd; }
+.badge-motivo-REABERTURA { background-color: #6f42c1; }
+.badge-motivo-PRIORIDADE_COMPENSACAO { background-color: #fd7e14; }
+.badge-motivo-DESIGNACAO_EXTERNA { background-color: #20c997; }
+section.tela { display: none; }
+section.tela.ativa { display: block; }
